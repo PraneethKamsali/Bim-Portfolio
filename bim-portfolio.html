@@ -1,0 +1,2182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Praneeth | BIM Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Fraunces:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a26;
+    --border: #2a2a3e;
+    --accent: #00e5ff;
+    --accent2: #7c3aed;
+    --accent3: #10b981;
+    --text: #e8e8f0;
+    --text-muted: #6b6b8a;
+    --text-dim: #3a3a5c;
+    --warn: #f59e0b;
+    --danger: #ef4444;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* NOISE TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.6;
+  }
+
+  /* GRID BACKGROUND */
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 40px;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+
+  .nav-logo span { color: var(--text-muted); font-weight: 400; }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  .nav-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--accent3);
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    background: var(--accent3);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.4); }
+  }
+
+  /* MAIN LAYOUT */
+  main { position: relative; z-index: 1; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 40px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    top: 20%;
+    left: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(0,229,255,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-glow2 {
+    position: absolute;
+    bottom: 10%;
+    right: -5%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(124,58,237,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-tag::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(48px, 8vw, 96px);
+    line-height: 1;
+    letter-spacing: -3px;
+    margin-bottom: 8px;
+  }
+
+  .hero-name-accent {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--accent);
+  }
+
+  .hero-subtitle {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(18px, 3vw, 28px);
+    color: var(--text-muted);
+    margin-bottom: 40px;
+    margin-top: 16px;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 48px;
+  }
+
+  .hero-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .hero-meta-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .hero-meta-value {
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  .hero-meta-value.highlight { color: var(--accent3); }
+
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .btn-primary {
+    padding: 14px 32px;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+
+  .btn-primary:hover {
+    background: #fff;
+    transform: translateY(-2px);
+  }
+
+  .btn-outline {
+    padding: 14px 32px;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* SCROLL INDICATOR */
+  .scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-dim);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .scroll-line {
+    width: 40px;
+    height: 1px;
+    background: var(--text-dim);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scroll-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--accent);
+    animation: scrollLine 2s infinite;
+  }
+
+  @keyframes scrollLine {
+    to { left: 100%; }
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 100px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    margin-bottom: 60px;
+  }
+
+  .section-num {
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 2px;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 36px;
+    letter-spacing: -1px;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* SKILLS GRID */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2px;
+  }
+
+  .skill-card {
+    background: var(--surface);
+    padding: 28px;
+    border: 1px solid var(--border);
+    position: relative;
+    transition: all 0.3s;
+    cursor: default;
+    overflow: hidden;
+  }
+
+  .skill-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+
+  .skill-card:hover::before { transform: scaleX(1); }
+  .skill-card:hover { background: var(--surface2); border-color: var(--accent); }
+
+  .skill-card-tag {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .skill-card-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .skill-card-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .skill-level {
+    margin-top: 16px;
+    height: 2px;
+    background: var(--border);
+    position: relative;
+  }
+
+  .skill-level-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width 1s ease;
+  }
+
+  .skill-level-label {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+
+  /* GAP ALERT */
+  .gap-alert {
+    background: rgba(245, 158, 11, 0.05);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-left: 3px solid var(--warn);
+    padding: 20px 24px;
+    margin-top: 40px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .gap-alert-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .gap-alert-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    color: var(--warn);
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+
+  .gap-alert-text {
+    color: var(--text-muted);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  /* PORTFOLIO PROJECTS */
+  .projects-grid {
+    display: grid;
+    gap: 2px;
+  }
+
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 320px;
+    transition: border-color 0.3s;
+    overflow: hidden;
+  }
+
+  .project-card:hover { border-color: var(--accent); }
+
+  .project-card.self-built {
+    border-left: 3px solid var(--accent3);
+  }
+
+  .project-card.real {
+    border-left: 3px solid var(--accent);
+  }
+
+  .project-card.planned {
+    border-left: 3px solid var(--text-dim);
+    opacity: 0.7;
+  }
+
+  .project-info {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .project-type {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .type-badge {
+    padding: 3px 10px;
+    border-radius: 0;
+    font-size: 9px;
+    letter-spacing: 2px;
+    font-weight: 500;
+  }
+
+  .badge-real { background: rgba(0,229,255,0.1); color: var(--accent); border: 1px solid rgba(0,229,255,0.2); }
+  .badge-built { background: rgba(16,185,129,0.1); color: var(--accent3); border: 1px solid rgba(16,185,129,0.2); }
+  .badge-planned { background: rgba(107,107,138,0.1); color: var(--text-muted); border: 1px solid var(--border); }
+  .badge-wip { background: rgba(245,158,11,0.1); color: var(--warn); border: 1px solid rgba(245,158,11,0.2); }
+
+  .project-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+  }
+
+  .project-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 24px;
+    flex: 1;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tag {
+    padding: 4px 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+
+  /* PROJECT VISUAL PANEL */
+  .project-visual {
+    background: var(--surface2);
+    border-left: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 40px;
+  }
+
+  /* BIM VISUALISATIONS */
+  .bim-viz {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  /* CLASH DETECTION VIZ */
+  .clash-viz {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .clash-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .clash-id {
+    font-size: 10px;
+    color: var(--text-dim);
+    width: 50px;
+    flex-shrink: 0;
+  }
+
+  .clash-bar {
+    flex: 1;
+    height: 28px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    font-size: 10px;
+    color: var(--text-muted);
+    overflow: hidden;
+  }
+
+  .clash-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    opacity: 0.2;
+  }
+
+  .clash-fill.hard { background: var(--danger); }
+  .clash-fill.clearance { background: var(--warn); }
+  .clash-fill.resolved { background: var(--accent3); }
+
+  .clash-status {
+    margin-left: auto;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    z-index: 1;
+  }
+
+  .status-hard { color: var(--danger); }
+  .status-clearance { color: var(--warn); }
+  .status-resolved { color: var(--accent3); }
+
+  /* FLOOR PLAN VIZ */
+  .floor-plan-viz {
+    width: 100%;
+    aspect-ratio: 1;
+    position: relative;
+    max-width: 220px;
+    margin: auto;
+  }
+
+  .floor-plan-viz svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* COORDINATION LOG VIZ */
+  .log-viz {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .log-entry {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .log-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  .log-content {
+    flex: 1;
+  }
+
+  .log-date {
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+  }
+
+  .log-text {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* BEP VIZ */
+  .bep-viz {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .bep-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .bep-section-name {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .bep-section-pages {
+    font-size: 10px;
+    color: var(--accent);
+  }
+
+  /* TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 40px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, var(--accent), var(--accent2), var(--text-dim));
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 48px;
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: -47px;
+    top: 4px;
+    width: 14px;
+    height: 14px;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+    transform: rotate(45deg);
+    transition: background 0.3s;
+  }
+
+  .timeline-item:hover .timeline-dot {
+    background: var(--accent);
+  }
+
+  .timeline-item.future .timeline-dot {
+    border-color: var(--text-dim);
+  }
+
+  .timeline-date {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .timeline-item.future .timeline-date { color: var(--text-dim); }
+
+  .timeline-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  .timeline-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-width: 600px;
+  }
+
+  /* HONESTY SECTION */
+  .honesty-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .honesty-card {
+    padding: 32px;
+    border: 1px solid var(--border);
+  }
+
+  .honesty-card.have {
+    background: rgba(16,185,129,0.03);
+    border-color: rgba(16,185,129,0.2);
+  }
+
+  .honesty-card.dont {
+    background: rgba(239,68,68,0.03);
+    border-color: rgba(239,68,68,0.2);
+  }
+
+  .honesty-header {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .honesty-card.have .honesty-header { color: var(--accent3); }
+  .honesty-card.dont .honesty-header { color: var(--danger); }
+
+  .honesty-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+    align-items: flex-start;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .honesty-item::before {
+    content: '→';
+    flex-shrink: 0;
+    margin-top: 0;
+  }
+
+  .honesty-card.have .honesty-item::before { color: var(--accent3); }
+  .honesty-card.dont .honesty-item::before { color: var(--danger); }
+
+  /* CONTACT */
+  .contact-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .contact-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 42px;
+    letter-spacing: -2px;
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .contact-sub {
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+
+  .contact-items {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .contact-item {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    padding: 16px 20px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.2s;
+  }
+
+  .contact-item:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateX(4px);
+  }
+
+  .contact-item-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    width: 80px;
+    flex-shrink: 0;
+  }
+
+  .contact-item-value {
+    font-size: 13px;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--text-dim);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* INTERACTIVE ELEMENTS */
+  .tab-nav {
+    display: flex;
+    gap: 0;
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tab-btn {
+    padding: 12px 24px;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.2s;
+  }
+
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .tab-btn:hover:not(.active) {
+    color: var(--text);
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* NAVISWORKS CLASH SIMULATOR */
+  .clash-simulator {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .sim-toolbar {
+    background: #0d0d14;
+    border-bottom: 1px solid var(--border);
+    padding: 8px 16px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .sim-toolbar-title {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+
+  .sim-btn {
+    padding: 5px 14px;
+    background: var(--accent);
+    border: none;
+    color: var(--bg);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: opacity 0.2s;
+  }
+
+  .sim-btn:hover { opacity: 0.8; }
+  .sim-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .sim-btn.secondary {
+    background: var(--surface);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  .sim-body {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    min-height: 400px;
+  }
+
+  .sim-viewport {
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-right: 1px solid var(--border);
+  }
+
+  .sim-3d-view {
+    width: 100%;
+    max-width: 400px;
+    aspect-ratio: 4/3;
+    position: relative;
+  }
+
+  .sim-3d-view svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .sim-panel {
+    background: #0d0d14;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sim-panel-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .sim-results {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+  }
+
+  .sim-clash-item {
+    padding: 10px 12px;
+    margin-bottom: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-left: 2px solid transparent;
+  }
+
+  .sim-clash-item:hover, .sim-clash-item.selected {
+    border-left-color: var(--accent);
+    background: var(--surface2);
+  }
+
+  .sim-clash-item.hard { border-left-color: var(--danger); }
+  .sim-clash-item.clearance { border-left-color: var(--warn); }
+  .sim-clash-item.resolved { border-left-color: var(--accent3); opacity: 0.6; }
+
+  .sim-clash-name {
+    font-size: 11px;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .sim-clash-details {
+    font-size: 10px;
+    color: var(--text-dim);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .sim-stats {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+
+  .sim-stat {
+    text-align: center;
+  }
+
+  .sim-stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .sim-stat-num.hard { color: var(--danger); }
+  .sim-stat-num.warn { color: var(--warn); }
+  .sim-stat-num.ok { color: var(--accent3); }
+
+  .sim-stat-label {
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .sim-log-output {
+    padding: 16px;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--accent3);
+    font-family: 'DM Mono', monospace;
+    min-height: 80px;
+  }
+
+  .log-line {
+    margin-bottom: 4px;
+    opacity: 0;
+    animation: fadeIn 0.3s forwards;
+  }
+
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  /* BEP BUILDER */
+  .bep-builder {
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+
+  .bep-nav {
+    display: flex;
+    background: #0d0d14;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .bep-nav-item {
+    padding: 12px 20px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+
+  .bep-nav-item.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .bep-content {
+    padding: 32px;
+  }
+
+  .bep-field-group {
+    margin-bottom: 24px;
+  }
+
+  .bep-field-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .bep-field {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    outline: none;
+    resize: none;
+    transition: border-color 0.2s;
+  }
+
+  .bep-field:focus { border-color: var(--accent); }
+
+  .bep-field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  /* ANIMATE ON SCROLL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 12px 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 100px 20px 60px; }
+    section { padding: 60px 20px; }
+    .project-card { grid-template-columns: 1fr; }
+    .honesty-grid { grid-template-columns: 1fr; }
+    .contact-section { grid-template-columns: 1fr; padding: 40px 20px; gap: 40px; }
+    .sim-body { grid-template-columns: 1fr; }
+    footer { padding: 20px; flex-direction: column; gap: 8px; }
+  }
+
+  /* CURSOR CUSTOM */
+  .cursor {
+    display: inline-block;
+    width: 2px;
+    height: 14px;
+    background: var(--accent);
+    animation: blink 1s infinite;
+    vertical-align: middle;
+    margin-left: 2px;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* LOADING BAR */
+  .loading-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    z-index: 9999;
+    transition: width 0.3s;
+    width: 0%;
+  }
+
+  /* COUNTER */
+  .counter-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 48px;
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-bottom: 2px;
+  }
+
+  .stat-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 32px 24px;
+    text-align: center;
+  }
+
+  .stat-box-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-top: 8px;
+  }
+
+  /* CERTIFICATE BADGES */
+  .cert-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 2px;
+    margin-top: 40px;
+  }
+
+  .cert-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px;
+    text-align: center;
+    transition: all 0.3s;
+  }
+
+  .cert-card:hover {
+    border-color: var(--accent2);
+    background: var(--surface2);
+  }
+
+  .cert-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .cert-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+
+  .cert-org {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .cert-status {
+    margin-top: 12px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .cert-status.earned { color: var(--accent3); }
+  .cert-status.in-progress { color: var(--warn); }
+  .cert-status.planned { color: var(--text-dim); }
+
+  /* PROGRESS RING */
+  .progress-ring {
+    display: inline-block;
+    position: relative;
+    width: 60px;
+    height: 60px;
+    margin-bottom: 12px;
+  }
+
+  .progress-ring svg {
+    transform: rotate(-90deg);
+  }
+
+  .progress-ring-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text);
+  }
+</style>
+</head>
+<body>
+
+<div class="loading-bar" id="loadingBar"></div>
+<div class="grid-bg"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">PRK<span>/bim</span></div>
+  <ul class="nav-links">
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#simulator">Simulator</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-status">
+    <div class="status-dot"></div>
+    Available — Graduate Route Visa
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+
+  <div class="hero-tag">BIM Portfolio — 2025/26</div>
+
+  <h1>
+    Praneeth<br>
+    <span class="hero-name-accent">Reddy</span>
+  </h1>
+
+  <div class="hero-subtitle">
+    BIM Coordinator & Construction Technologist<span class="cursor"></span>
+  </div>
+
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">Education</span>
+      <span class="hero-meta-value">MSc CPM with BIM — Northumbria</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">Standard</span>
+      <span class="hero-meta-value">ISO 19650 Aware</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">Status</span>
+      <span class="hero-meta-value highlight">Open to Relocation — UK</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">Dissertation</span>
+      <span class="hero-meta-value">BIM in UK Infrastructure</span>
+    </div>
+  </div>
+
+  <div class="hero-cta">
+    <a href="#projects" class="btn-primary">View Portfolio</a>
+    <a href="#contact" class="btn-outline">Get in Touch</a>
+  </div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    Scroll to explore
+  </div>
+</div>
+
+<!-- STATS -->
+<div style="background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); position: relative; z-index: 1;">
+  <div class="stats-row" style="max-width: 1200px; margin: 0 auto;">
+    <div class="stat-box">
+      <div class="counter-num" data-target="3" style="color: var(--accent)">0</div>
+      <div class="stat-box-label">Live Projects</div>
+    </div>
+    <div class="stat-box">
+      <div class="counter-num" data-target="5" style="color: var(--accent2)">0</div>
+      <div class="stat-box-label">Software Tools</div>
+    </div>
+    <div class="stat-box">
+      <div class="counter-num" data-target="2" style="color: var(--accent3)">0</div>
+      <div class="stat-box-label">Countries Worked</div>
+    </div>
+    <div class="stat-box">
+      <div class="counter-num" data-target="19650">0</div>
+      <div class="stat-box-label">ISO Standard</div>
+    </div>
+  </div>
+</div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-header reveal">
+    <span class="section-num">01</span>
+    <h2 class="section-title">Technical Skills</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="skills-grid reveal">
+    <div class="skill-card">
+      <div class="skill-card-tag">Authoring</div>
+      <div class="skill-card-name">Autodesk Revit</div>
+      <div class="skill-card-desc">Architectural modelling, family creation, view management, sheet setup. Used on Maggie's Centre project.</div>
+      <div class="skill-level"><div class="skill-level-fill" style="width: 75%"></div></div>
+      <div class="skill-level-label"><span>Proficient</span><span>75%</span></div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-tag">Coordination</div>
+      <div class="skill-card-name">Navisworks Manage</div>
+      <div class="skill-card-desc">Clash detection, federation, timeline simulation. Building MEP coordination experience via self-built models.</div>
+      <div class="skill-level"><div class="skill-level-fill" style="width: 55%"></div></div>
+      <div class="skill-level-label"><span>Developing</span><span>55%</span></div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-tag">Standard</div>
+      <div class="skill-card-name">ISO 19650</div>
+      <div class="skill-card-desc">Information management framework. Academic study + dissertation application. Practical CDE application developing.</div>
+      <div class="skill-level"><div class="skill-level-fill" style="width: 65%"></div></div>
+      <div class="skill-level-label"><span>Aware → Applying</span><span>65%</span></div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-tag">Documentation</div>
+      <div class="skill-card-name">AutoCAD</div>
+      <div class="skill-card-desc">2D drafting, drawing production, annotation. Strong background from civil engineering degree.</div>
+      <div class="skill-level"><div class="skill-level-fill" style="width: 80%"></div></div>
+      <div class="skill-level-label"><span>Strong</span><span>80%</span></div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-tag">Planning</div>
+      <div class="skill-card-name">Primavera P6</div>
+      <div class="skill-card-desc">Project scheduling, resource planning, baseline management. Academic and project application.</div>
+      <div class="skill-level"><div class="skill-level-fill" style="width: 60%"></div></div>
+      <div class="skill-level-label"><span>Competent</span><span>60%</span></div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-tag">Engineering</div>
+      <div class="skill-card-name">Civil Engineering</div>
+      <div class="skill-card-desc">BEng foundation. Structural principles, site understanding, construction methodology knowledge.</div>
+      <div class="skill-level"><div class="skill-level-fill" style="width: 85%"></div></div>
+      <div class="skill-level-label"><span>Strong Foundation</span><span>85%</span></div>
+    </div>
+  </div>
+
+  <div class="gap-alert reveal">
+    <div class="gap-alert-icon">⚠</div>
+    <div>
+      <div class="gap-alert-title">Acknowledged Gap: MEP Clash Detection</div>
+      <div class="gap-alert-text">
+        The Maggie's Centre project was architecture-led with no MEP scope. As a result, live MEP clash detection experience is currently absent. This is being addressed through self-built federated models combining Autodesk sample architectural and MEP content, with Navisworks Manage clash testing documented below. Transparency about this gap is intentional — it is more credible than inflating the CV.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO PROJECTS -->
+<section id="projects">
+  <div class="section-header reveal">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Portfolio Projects</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="tab-nav reveal">
+    <button class="tab-btn active" onclick="switchTab(this, 'all')">All</button>
+    <button class="tab-btn" onclick="switchTab(this, 'real')">Live Projects</button>
+    <button class="tab-btn" onclick="switchTab(this, 'built')">Self-Built</button>
+    <button class="tab-btn" onclick="switchTab(this, 'planned')">In Progress</button>
+  </div>
+
+  <div class="projects-grid reveal">
+
+    <!-- PROJECT 1: REAL -->
+    <div class="project-card real" data-category="real">
+      <div class="project-info">
+        <div>
+          <div class="project-type">
+            <span class="type-badge badge-real">Live Project</span>
+          </div>
+          <div class="project-title">Maggie's Centre — BIM Coordination</div>
+          <div class="project-desc">
+            Served as Design & BIM Coordination Lead on this architecturally-driven project. Managed Revit model production, design team coordination, drawing issue management, and version control. Architecture-only scope — no MEP. This is stated accurately: the coordination challenge was design management, not multi-discipline clash detection.
+          </div>
+          <div class="project-tags">
+            <span class="tag">Revit</span>
+            <span class="tag">BIM Coordination</span>
+            <span class="tag">Architectural</span>
+            <span class="tag">Design Management</span>
+            <span class="tag">Drawing Issue</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-visual">
+        <div style="width: 100%;">
+          <div style="font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 20px;">Model Coordination Log</div>
+          <div class="log-viz">
+            <div class="log-entry">
+              <div class="log-dot" style="background: var(--accent)"></div>
+              <div class="log-content">
+                <div class="log-date">Phase 2 — Design Development</div>
+                <div class="log-text">Architectural Revit model federated with structural elements. 12 design queries raised and resolved.</div>
+              </div>
+            </div>
+            <div class="log-entry">
+              <div class="log-dot" style="background: var(--accent2)"></div>
+              <div class="log-content">
+                <div class="log-date">Phase 3 — Technical Design</div>
+                <div class="log-text">Drawing set issued for planning. 47 sheets produced, 3 revision cycles completed.</div>
+              </div>
+            </div>
+            <div class="log-entry">
+              <div class="log-dot" style="background: var(--accent3)"></div>
+              <div class="log-content">
+                <div class="log-date">Final Issue</div>
+                <div class="log-text">Model handed over per project BEP. IFC export completed for contractor use.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 2: SELF-BUILT -->
+    <div class="project-card self-built" data-category="built">
+      <div class="project-info">
+        <div>
+          <div class="project-type">
+            <span class="type-badge badge-built">Self-Built Portfolio</span>
+          </div>
+          <div class="project-title">MEP Clash Detection — Federated Model</div>
+          <div class="project-desc">
+            Built independently to address the MEP gap from Maggie's Centre. Autodesk sample architectural base model federated with MEP content (ductwork, pipework, conduit) in Navisworks Manage. 23 hard clashes detected, 18 resolved, clash reports documented. Transparent about this being a self-built learning exercise — not a live project claim.
+          </div>
+          <div class="project-tags">
+            <span class="tag">Navisworks</span>
+            <span class="tag">MEP</span>
+            <span class="tag">Clash Detection</span>
+            <span class="tag">Federation</span>
+            <span class="tag">Self-Initiated</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-visual">
+        <div style="width: 100%;">
+          <div style="font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 16px;">Clash Detection Report</div>
+          <div class="clash-viz">
+            <div class="clash-row">
+              <div class="clash-id">CLH-001</div>
+              <div class="clash-bar">
+                <div class="clash-fill hard" style="width: 100%"></div>
+                Duct vs Beam — Level 2
+                <span class="clash-status status-hard">HARD</span>
+              </div>
+            </div>
+            <div class="clash-row">
+              <div class="clash-id">CLH-002</div>
+              <div class="clash-bar">
+                <div class="clash-fill hard" style="width: 100%"></div>
+                Pipe vs Column — Core
+                <span class="clash-status status-hard">HARD</span>
+              </div>
+            </div>
+            <div class="clash-row">
+              <div class="clash-id">CLH-003</div>
+              <div class="clash-bar">
+                <div class="clash-fill clearance" style="width: 100%"></div>
+                Conduit Clearance — Ceiling
+                <span class="clash-status status-clearance">CLEARANCE</span>
+              </div>
+            </div>
+            <div class="clash-row">
+              <div class="clash-id">CLH-004</div>
+              <div class="clash-bar">
+                <div class="clash-fill resolved" style="width: 100%"></div>
+                Duct re-routed — Resolved
+                <span class="clash-status status-resolved">RESOLVED</span>
+              </div>
+            </div>
+            <div class="clash-row">
+              <div class="clash-id">CLH-005</div>
+              <div class="clash-bar">
+                <div class="clash-fill resolved" style="width: 100%"></div>
+                Pipe offset — Resolved
+                <span class="clash-status status-resolved">RESOLVED</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 3: DISSERTATION -->
+    <div class="project-card real" data-category="real">
+      <div class="project-info">
+        <div>
+          <div class="project-type">
+            <span class="type-badge badge-real">Academic Research</span>
+          </div>
+          <div class="project-title">Dissertation — BIM in UK Infrastructure</div>
+          <div class="project-desc">
+            "Evaluating the Role of BIM-Based Coordination in Improving Construction Planning Efficiency in UK Infrastructure Projects." Research into 4D BIM, clash detection efficiency, and information management under ISO 19650 in UK rail and highways contexts. Supervised by Claudio Benghi. Submission May 2026.
+          </div>
+          <div class="project-tags">
+            <span class="tag">Research</span>
+            <span class="tag">ISO 19650</span>
+            <span class="tag">Infrastructure</span>
+            <span class="tag">4D BIM</span>
+            <span class="tag">UK Rail</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-visual">
+        <div style="width: 100%;">
+          <div style="font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 16px;">Research Structure</div>
+          <div class="bep-viz">
+            <div class="bep-section"><span class="bep-section-name">Literature Review</span><span class="bep-section-pages" style="color: var(--accent3)">✓ Done</span></div>
+            <div class="bep-section"><span class="bep-section-name">Methodology</span><span class="bep-section-pages" style="color: var(--accent3)">✓ Done</span></div>
+            <div class="bep-section"><span class="bep-section-name">Data Collection</span><span class="bep-section-pages" style="color: var(--warn)">In Progress</span></div>
+            <div class="bep-section"><span class="bep-section-name">Analysis & Findings</span><span class="bep-section-pages" style="color: var(--text-dim)">Pending</span></div>
+            <div class="bep-section"><span class="bep-section-name">Conclusion & Submission</span><span class="bep-section-pages" style="color: var(--text-dim)">May 2026</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 4: BEP -->
+    <div class="project-card self-built" data-category="built">
+      <div class="project-info">
+        <div>
+          <div class="project-type">
+            <span class="type-badge badge-built">Self-Built Portfolio</span>
+          </div>
+          <div class="project-title">BIM Execution Plan — ISO 19650</div>
+          <div class="project-desc">
+            A complete BEP written for a hypothetical 6-storey commercial development, following ISO 19650-2 requirements. Includes pre-contract BEP, responsibility matrix, MIDP/TIDP structure, information delivery milestones, and CDE protocol. This document type is required on every UK public sector project and knowing how to write one separates BIM Coordinators from BIM Technicians.
+          </div>
+          <div class="project-tags">
+            <span class="tag">BEP</span>
+            <span class="tag">ISO 19650-2</span>
+            <span class="tag">MIDP</span>
+            <span class="tag">CDE Protocol</span>
+            <span class="tag">Self-Authored</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-visual">
+        <div style="width: 100%;">
+          <div style="font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 16px;">BEP Sections</div>
+          <div class="bep-viz">
+            <div class="bep-section"><span class="bep-section-name">Project Information</span><span class="bep-section-pages">pp. 1–4</span></div>
+            <div class="bep-section"><span class="bep-section-name">Information Requirements</span><span class="bep-section-pages">pp. 5–10</span></div>
+            <div class="bep-section"><span class="bep-section-name">Responsibility Matrix</span><span class="bep-section-pages">pp. 11–15</span></div>
+            <div class="bep-section"><span class="bep-section-name">CDE Protocol</span><span class="bep-section-pages">pp. 16–20</span></div>
+            <div class="bep-section"><span class="bep-section-name">MIDP / TIDP</span><span class="bep-section-pages">pp. 21–27</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CLASH DETECTION SIMULATOR -->
+<section id="simulator">
+  <div class="section-header reveal">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Interactive Clash Simulator</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <p class="reveal" style="color: var(--text-muted); font-size: 13px; margin-bottom: 32px; max-width: 700px;">
+    A demonstration of clash detection workflow understanding. Run the simulation to see how clashes are identified, categorised, and resolved — the same logic used in Navisworks Manage on real projects.
+  </p>
+
+  <div class="clash-simulator reveal">
+    <div class="sim-toolbar">
+      <span class="sim-toolbar-title">Navisworks — Clash Detective</span>
+      <button class="sim-btn" id="runClashBtn" onclick="runClashDetection()">▶ Run Clash Test</button>
+      <button class="sim-btn secondary" id="resolveBtn" onclick="resolveSelected()" disabled>✓ Mark Resolved</button>
+      <button class="sim-btn secondary" onclick="resetSim()">↺ Reset</button>
+      <span style="margin-left: auto; font-size: 10px; color: var(--text-dim);">Test: Architectural vs MEP — Hard + Clearance</span>
+    </div>
+
+    <div class="sim-body">
+      <div class="sim-viewport">
+        <div class="sim-3d-view">
+          <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" id="buildingViz">
+            <!-- Building outline isometric -->
+            <defs>
+              <marker id="arrow" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L6,3 z" fill="var(--accent)"/>
+              </marker>
+            </defs>
+
+            <!-- Floor slabs -->
+            <polygon points="60,200 200,130 340,200 200,270" fill="#1a1a26" stroke="#2a2a3e" stroke-width="1"/>
+            <polygon points="60,150 200,80 340,150 200,220" fill="#111118" stroke="#2a2a3e" stroke-width="1"/>
+            <polygon points="60,100 200,30 340,100 200,170" fill="#0a0a0f" stroke="#2a2a3e" stroke-width="1"/>
+
+            <!-- Structural beams -->
+            <line x1="60" y1="150" x2="60" y2="200" stroke="#3a3a5c" stroke-width="6"/>
+            <line x1="340" y1="150" x2="340" y2="200" stroke="#3a3a5c" stroke-width="6"/>
+            <line x1="200" y1="80" x2="200" y2="130" stroke="#3a3a5c" stroke-width="6"/>
+            <!-- Beam across -->
+            <line x1="60" y1="150" x2="340" y2="150" stroke="#2a6090" stroke-width="8" opacity="0.8"/>
+            <text x="165" y="144" fill="#6b9fd4" font-size="8" font-family="monospace">STRUCT BEAM</text>
+
+            <!-- MEP Duct (starts hidden) -->
+            <rect id="duct1" x="130" y="143" width="140" height="12" fill="transparent" stroke="transparent" rx="2"/>
+            <text id="ductLabel" x="148" y="153" fill="transparent" font-size="7" font-family="monospace">HVAC DUCT</text>
+
+            <!-- Pipe (starts hidden) -->
+            <ellipse id="pipe1" cx="200" cy="155" rx="50" ry="6" fill="transparent" stroke="transparent"/>
+            <text id="pipeLabel" x="180" y="172" fill="transparent" font-size="7" font-family="monospace">CHILLED WATER PIPE</text>
+
+            <!-- Clash indicators (starts hidden) -->
+            <circle id="clash1" cx="175" cy="150" r="8" fill="transparent" stroke="transparent"/>
+            <text id="clashX1" x="171" y="154" fill="transparent" font-size="12" font-weight="bold">✕</text>
+
+            <circle id="clash2" cx="225" cy="150" r="8" fill="transparent" stroke="transparent"/>
+            <text id="clashX2" x="221" y="154" fill="transparent" font-size="12" font-weight="bold">✕</text>
+
+            <!-- Grid labels -->
+            <text x="20" y="205" fill="#3a3a5c" font-size="9" font-family="monospace">L1</text>
+            <text x="20" y="155" fill="#3a3a5c" font-size="9" font-family="monospace">L2</text>
+            <text x="20" y="105" fill="#3a3a5c" font-size="9" font-family="monospace">L3</text>
+
+            <!-- Axis -->
+            <text x="350" y="205" fill="#3a3a5c" font-size="8" font-family="monospace">A</text>
+            <text x="350" y="155" fill="#3a3a5c" font-size="8" font-family="monospace">B</text>
+
+            <text x="170" y="295" fill="#3a3a5c" font-size="9" font-family="monospace">FEDERATED MODEL — ARCH + MEP</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="sim-panel">
+        <div class="sim-panel-header">Clash Results</div>
+        <div class="sim-results" id="clashResults">
+          <div style="padding: 20px; text-align: center; color: var(--text-dim); font-size: 11px;">
+            Run clash test to detect conflicts
+          </div>
+        </div>
+        <div class="sim-stats">
+          <div class="sim-stat">
+            <div class="sim-stat-num hard" id="hardCount">0</div>
+            <div class="sim-stat-label">Hard</div>
+          </div>
+          <div class="sim-stat">
+            <div class="sim-stat-num warn" id="clearanceCount">0</div>
+            <div class="sim-stat-label">Clearance</div>
+          </div>
+          <div class="sim-stat">
+            <div class="sim-stat-num ok" id="resolvedCount">0</div>
+            <div class="sim-stat-label">Resolved</div>
+          </div>
+        </div>
+        <div class="sim-log-output" id="simLog">
+          <div style="color: var(--text-dim);">// Ready to run clash test</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HONESTY SECTION -->
+<section id="honesty">
+  <div class="section-header reveal">
+    <span class="section-num">04</span>
+    <h2 class="section-title">Honest Assessment</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <p class="reveal" style="color: var(--text-muted); font-size: 13px; margin-bottom: 40px; max-width: 700px;">
+    Every BIM portfolio overstates. This one does not. Here is an accurate picture of what I bring to a role and what I am still developing.
+  </p>
+
+  <div class="honesty-grid reveal">
+    <div class="honesty-card have">
+      <div class="honesty-header">✓ What I Can Do Now</div>
+      <div class="honesty-item">Revit architectural modelling — production-ready</div>
+      <div class="honesty-item">Design team coordination on live projects (Maggie's Centre)</div>
+      <div class="honesty-item">ISO 19650 framework — studied and applying in dissertation</div>
+      <div class="honesty-item">BEP structure and information requirements documentation</div>
+      <div class="honesty-item">AutoCAD 2D production drawing to professional standard</div>
+      <div class="honesty-item">Project scheduling in Primavera P6</div>
+      <div class="honesty-item">Drawing issue management and revision control</div>
+      <div class="honesty-item">Civil engineering principles from BEng degree</div>
+    </div>
+    <div class="honesty-card dont">
+      <div class="honesty-header">✗ What I'm Still Building</div>
+      <div class="honesty-item">Live MEP clash detection — no real project experience, self-building now</div>
+      <div class="honesty-item">CDE platform operation on a live project (BIM 360/ACC)</div>
+      <div class="honesty-item">Leading a coordination meeting independently</div>
+      <div class="honesty-item">RFI / Technical Query log management at scale</div>
+      <div class="honesty-item">Federated model management across 5+ disciplines</div>
+      <div class="honesty-item">Site-to-model verification workflows</div>
+      <div class="honesty-item">Autodesk Certified Professional status (in progress)</div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section id="certs">
+  <div class="section-header reveal">
+    <span class="section-num">05</span>
+    <h2 class="section-title">Certifications</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="cert-grid reveal">
+    <div class="cert-card">
+      <span class="cert-icon">🎓</span>
+      <div class="cert-name">MSc CPM with BIM</div>
+      <div class="cert-org">Northumbria University</div>
+      <div class="cert-status in-progress">Graduating 2026</div>
+    </div>
+    <div class="cert-card">
+      <span class="cert-icon">🏗️</span>
+      <div class="cert-name">BEng Civil Engineering</div>
+      <div class="cert-org">India</div>
+      <div class="cert-status earned">Earned</div>
+    </div>
+    <div class="cert-card">
+      <span class="cert-icon">⚙️</span>
+      <div class="cert-name">Autodesk Certified Professional</div>
+      <div class="cert-org">Revit — Autodesk</div>
+      <div class="cert-status in-progress">In Progress — Priority</div>
+    </div>
+    <div class="cert-card">
+      <span class="cert-icon">📋</span>
+      <div class="cert-name">CIOB Membership</div>
+      <div class="cert-org">Chartered Institute of Building</div>
+      <div class="cert-status planned">Planned — Year 2</div>
+    </div>
+    <div class="cert-card">
+      <span class="cert-icon">📐</span>
+      <div class="cert-name">ISO 19650 Certificate</div>
+      <div class="cert-org">BSI Group</div>
+      <div class="cert-status planned">Planned — Year 1</div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="section-header reveal">
+    <span class="section-num">06</span>
+    <h2 class="section-title">Career Roadmap</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="timeline reveal">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">Now → May 2026</div>
+      <div class="timeline-title">Portfolio + Dissertation</div>
+      <div class="timeline-desc">Complete self-built MEP clash detection portfolio. Submit dissertation. Achieve Autodesk Certified Professional in Revit. Apply for graduate schemes at Laing O'Rourke, Mace, Balfour Beatty, AECOM, WSP.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">Mid 2026</div>
+      <div class="timeline-title">BIM Technician / Graduate BIM Role</div>
+      <div class="timeline-desc">Enter industry as BIM Technician or Graduate BIM Coordinator. Target firms with Skilled Worker Sponsor Licences. Begin working in live CDE environment. Learn MEP coordination from real projects.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">2027 → 2028</div>
+      <div class="timeline-title">Junior BIM Coordinator</div>
+      <div class="timeline-desc">Build live MEP coordination experience. Lead coordination meetings. Produce BEPs on real projects. Achieve ISO 19650 professional certification. Secure Skilled Worker visa sponsorship.</div>
+    </div>
+    <div class="timeline-item future">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">2029 → 2030</div>
+      <div class="timeline-title">Design Coordinator</div>
+      <div class="timeline-desc">Full Design Coordinator responsibility. Lead multi-discipline coordination across architecture, structure, and MEP on major UK infrastructure or commercial projects. Target infrastructure: rail, highways, utilities — aligned with dissertation specialism.</div>
+    </div>
+    <div class="timeline-item future">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">2031+</div>
+      <div class="timeline-title">BIM Manager / Lead</div>
+      <div class="timeline-desc">BIM Manager on major projects or programmes. CIOB/IEng membership. Contributing to UK BIM standards and workflows. Potential specialisation in infrastructure digital delivery.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-header reveal">
+    <span class="section-num">07</span>
+    <h2 class="section-title">Get in Touch</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="contact-section reveal">
+    <div>
+      <div class="contact-title">Open to<br>Opportunities</div>
+      <div class="contact-sub">
+        Seeking BIM Technician, Junior BIM Coordinator, or Graduate Civil Engineer roles anywhere in the UK. Available from Summer 2026. Eligible to work under Graduate Route visa — 2 years, no sponsorship required initially.
+      </div>
+      <div class="hero-cta">
+        <a href="mailto:praneeth@email.com" class="btn-primary">Send Email</a>
+        <a href="https://linkedin.com" target="_blank" class="btn-outline">LinkedIn</a>
+      </div>
+    </div>
+    <div class="contact-items">
+      <div class="contact-item">
+        <span class="contact-item-label">Location</span>
+        <span class="contact-item-value">Newcastle / Open to UK Relocation</span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-item-label">Visa</span>
+        <span class="contact-item-value">Graduate Route — 2 Years No Sponsorship</span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-item-label">Available</span>
+        <span class="contact-item-value">Summer 2026 (post-graduation)</span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-item-label">Target</span>
+        <span class="contact-item-value">BIM / Infrastructure / Tier 1 Contractor</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>Praneeth Reddy Kukkala — BIM Portfolio 2026</div>
+  <div style="color: var(--text-dim);">MSc CPM with BIM — Northumbria University</div>
+  <div style="color: var(--accent); font-size: 10px; letter-spacing: 1px;">ISO 19650 • REVIT • NAVISWORKS • UK BIM</div>
+</footer>
+
+<script>
+  // LOADING BAR
+  window.addEventListener('load', () => {
+    const bar = document.getElementById('loadingBar');
+    bar.style.width = '100%';
+    setTimeout(() => bar.style.opacity = '0', 500);
+  });
+
+  // SCROLL REVEAL
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // COUNTER ANIMATION
+  function animateCounter(el, target, duration = 1500) {
+    const start = performance.now();
+    const startVal = 0;
+    const update = (time) => {
+      const elapsed = time - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.floor(startVal + (target - startVal) * eased);
+      el.textContent = current.toLocaleString();
+      if (progress < 1) requestAnimationFrame(update);
+    };
+    requestAnimationFrame(update);
+  }
+
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const target = parseInt(e.target.dataset.target);
+        animateCounter(e.target, target);
+        counterObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('[data-target]').forEach(el => counterObserver.observe(el));
+
+  // TAB SWITCHING
+  function switchTab(btn, category) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.project-card').forEach(card => {
+      if (category === 'all' || card.dataset.category === category) {
+        card.style.display = 'grid';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  // CLASH DETECTION SIMULATOR
+  const clashData = [
+    { id: 'CLH-001', name: 'HVAC Duct vs Structural Beam', discipline1: 'MEP: HVAC', discipline2: 'Structural', level: 'L2', type: 'hard', distance: -85, status: 'active' },
+    { id: 'CLH-002', name: 'Chilled Water Pipe vs Beam Web', discipline1: 'MEP: Plumbing', discipline2: 'Structural', level: 'L2', type: 'hard', distance: -42, status: 'active' },
+    { id: 'CLH-003', name: 'Electrical Conduit vs Duct Clearance', discipline1: 'MEP: Electrical', discipline2: 'MEP: HVAC', level: 'L2', type: 'clearance', distance: 18, status: 'active' },
+    { id: 'CLH-004', name: 'Sprinkler Drop vs Duct Flange', discipline1: 'MEP: Fire', discipline2: 'MEP: HVAC', level: 'L2', type: 'hard', distance: -12, status: 'active' },
+    { id: 'CLH-005', name: 'HWS Pipe vs Column Face Clearance', discipline1: 'MEP: Plumbing', discipline2: 'Structural', level: 'L1', type: 'clearance', distance: 22, status: 'active' },
+  ];
+
+  let simState = { run: false, selected: null, clashes: JSON.parse(JSON.stringify(clashData)) };
+
+  function runClashDetection() {
+    simState.run = true;
+    const log = document.getElementById('simLog');
+    const results = document.getElementById('clashResults');
+    document.getElementById('runClashBtn').disabled = true;
+
+    const lines = [
+      '> Initialising Clash Detective...',
+      '> Loading: ARCH_L2_Final.rvt',
+      '> Loading: MEP_Coordinated_v3.rvt',
+      '> Federation complete — 2 models',
+      '> Running Hard Clash test...',
+      '> Running Clearance test (50mm threshold)...',
+      '> Analysis complete.',
+    ];
+
+    log.innerHTML = '';
+    let i = 0;
+    const addLine = () => {
+      if (i < lines.length) {
+        const div = document.createElement('div');
+        div.className = 'log-line';
+        div.style.animationDelay = `${i * 0.1}s`;
+        div.style.color = lines[i].includes('complete') ? 'var(--accent3)' :
+                          lines[i].includes('Running') ? 'var(--accent)' : 'var(--text-muted)';
+        div.textContent = lines[i];
+        log.appendChild(div);
+        i++;
+        setTimeout(addLine, 300);
+      } else {
+        renderResults();
+        animateBuildingViz();
+        updateStats();
+      }
+    };
+    addLine();
+  }
+
+  function renderResults() {
+    const results = document.getElementById('clashResults');
+    results.innerHTML = '';
+    simState.clashes.forEach((clash, idx) => {
+      const item = document.createElement('div');
+      item.className = `sim-clash-item ${clash.type} ${clash.status === 'resolved' ? 'resolved' : ''}`;
+      item.innerHTML = `
+        <div class="sim-clash-name">${clash.id}: ${clash.name}</div>
+        <div class="sim-clash-details">
+          <span>${clash.discipline1} ↔ ${clash.discipline2}</span>
+          <span style="color: ${clash.type === 'hard' ? 'var(--danger)' : clash.type === 'clearance' ? 'var(--warn)' : 'var(--accent3)'}">
+            ${clash.status === 'resolved' ? 'RESOLVED' : clash.type.toUpperCase()} ${clash.distance}mm
+          </span>
+        </div>
+      `;
+      item.onclick = () => selectClash(idx, item);
+      results.appendChild(item);
+    });
+    document.getElementById('resolveBtn').disabled = false;
+  }
+
+  function selectClash(idx, el) {
+    document.querySelectorAll('.sim-clash-item').forEach(i => i.classList.remove('selected'));
+    el.classList.add('selected');
+    simState.selected = idx;
+
+    const clash = simState.clashes[idx];
+    const log = document.getElementById('simLog');
+    log.innerHTML = `
+      <div class="log-line" style="color: var(--accent)">Selected: ${clash.id}</div>
+      <div class="log-line" style="color: var(--text-muted)">Distance: ${clash.distance}mm | Level: ${clash.level}</div>
+      <div class="log-line" style="color: var(--text-dim)">${clash.discipline1} intersects ${clash.discipline2}</div>
+    `;
+  }
+
+  function resolveSelected() {
+    if (simState.selected === null) return;
+    const clash = simState.clashes[simState.selected];
+    if (clash.status === 'resolved') return;
+    clash.status = 'resolved';
+
+    const log = document.getElementById('simLog');
+    log.innerHTML += `<div class="log-line" style="color: var(--accent3)">✓ ${clash.id} marked resolved — coordination action logged</div>`;
+
+    renderResults();
+    updateStats();
+  }
+
+  function updateStats() {
+    const hard = simState.clashes.filter(c => c.type === 'hard' && c.status !== 'resolved').length;
+    const clearance = simState.clashes.filter(c => c.type === 'clearance' && c.status !== 'resolved').length;
+    const resolved = simState.clashes.filter(c => c.status === 'resolved').length;
+    document.getElementById('hardCount').textContent = hard;
+    document.getElementById('clearanceCount').textContent = clearance;
+    document.getElementById('resolvedCount').textContent = resolved;
+  }
+
+  function animateBuildingViz() {
+    // Show MEP elements in SVG
+    const duct1 = document.getElementById('duct1');
+    const ductLabel = document.getElementById('ductLabel');
+    const pipe1 = document.getElementById('pipe1');
+    const pipeLabel = document.getElementById('pipeLabel');
+    const clash1 = document.getElementById('clash1');
+    const clash2 = document.getElementById('clash2');
+    const clashX1 = document.getElementById('clashX1');
+    const clashX2 = document.getElementById('clashX2');
+
+    setTimeout(() => {
+      duct1.setAttribute('fill', 'rgba(0,229,255,0.3)');
+      duct1.setAttribute('stroke', 'var(--accent)');
+      duct1.setAttribute('stroke-width', '1');
+      ductLabel.setAttribute('fill', 'var(--accent)');
+    }, 800);
+
+    setTimeout(() => {
+      pipe1.setAttribute('fill', 'rgba(124,58,237,0.3)');
+      pipe1.setAttribute('stroke', 'var(--accent2)');
+      pipeLabel.setAttribute('fill', 'var(--accent2)');
+    }, 1200);
+
+    setTimeout(() => {
+      clash1.setAttribute('fill', 'rgba(239,68,68,0.2)');
+      clash1.setAttribute('stroke', 'var(--danger)');
+      clashX1.setAttribute('fill', 'var(--danger)');
+      clash2.setAttribute('fill', 'rgba(239,68,68,0.2)');
+      clash2.setAttribute('stroke', 'var(--danger)');
+      clashX2.setAttribute('fill', 'var(--danger)');
+    }, 1800);
+  }
+
+  function resetSim() {
+    simState = { run: false, selected: null, clashes: JSON.parse(JSON.stringify(clashData)) };
+    document.getElementById('clashResults').innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-dim); font-size: 11px;">Run clash test to detect conflicts</div>';
+    document.getElementById('simLog').innerHTML = '<div style="color: var(--text-dim);">// Ready to run clash test</div>';
+    document.getElementById('hardCount').textContent = '0';
+    document.getElementById('clearanceCount').textContent = '0';
+    document.getElementById('resolvedCount').textContent = '0';
+    document.getElementById('runClashBtn').disabled = false;
+    document.getElementById('resolveBtn').disabled = true;
+
+    // Reset SVG
+    ['duct1','pipe1','clash1','clash2'].forEach(id => {
+      const el = document.getElementById(id);
+      el.setAttribute('fill', 'transparent');
+      el.setAttribute('stroke', 'transparent');
+    });
+    ['ductLabel','pipeLabel','clashX1','clashX2'].forEach(id => {
+      document.getElementById(id).setAttribute('fill', 'transparent');
+    });
+  }
+</script>
+
+</body>
+</html>
